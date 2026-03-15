@@ -16,3 +16,21 @@ jobs:
           server: ${{ secrets.CAPROVER_PROD_SERVER }}
           app: trinity-status
           token: ${{ secrets.CAPROVER_TRINITY_STATUS_TOKEN }}
+
+      - name: Set container port to 3000
+        env:
+          CAPROVER_PASSWORD: ${{ secrets.CAPROVER_PASSWORD }}
+          CAPROVER_SERVER: ${{ secrets.CAPROVER_PROD_SERVER }}
+        run: |
+          python3 - <<PYEOF
+          import urllib.request, json, os
+          base = os.environ['CAPROVER_SERVER'] + ':3000/api/v2'
+          data = json.dumps({'password': os.environ['CAPROVER_PASSWORD']}).encode()
+          req = urllib.request.Request(base + '/login', data=data, headers={'Content-Type': 'application/json'})
+          token = json.loads(urllib.request.urlopen(req).read())['data']['token']
+          payload = json.dumps({'appName': 'trinity-status', 'instanceCount': 1, 'containerHttpPort': 3000}).encode()
+          req2 = urllib.request.Request(base + '/user/apps/appDefinitions/update', data=payload,
+              headers={'x-captain-auth': token, 'Content-Type': 'application/json'}, method='POST')
+          r = json.loads(urllib.request.urlopen(req2, timeout=30).read())
+          print('trinity-status port fix:', r.get('status'), r.get('description'))
+          PYEOF
