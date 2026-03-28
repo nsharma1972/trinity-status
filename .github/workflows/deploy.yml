@@ -10,6 +10,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Build deploy tarball
+        run: tar -czf deploy.tar --exclude='.git' --exclude='node_modules' .
+
       - name: Deploy to CapRover (production)
         uses: caprover/deploy-from-github@v1.1.2
         with:
