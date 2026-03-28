@@ -6,6 +6,7 @@ const SERVERS = [
   { name: 'Dev',        ip: '150.136.93.177', domain: 'dev.trinitybps.com',  color: '#3b82f6' },
   { name: 'Test',       ip: '129.213.83.13',  domain: 'test.trinitybps.com', color: '#f59e0b' },
   { name: 'Production', ip: '132.145.133.150', domain: 'apps.trinitybps.com', color: '#22c55e' },
+  { name: 'VPS',        ip: '66.179.138.130',  domain: 'app.trinitybps.com',  color: '#8b5cf6' },
 ]
 
 const CAPROVER_PASSWORD = process.env.CAPROVER_PASSWORD || 'HImnme@1927'
@@ -19,7 +20,9 @@ const APP_META = {
   'tdi-redis':     { desc: 'Redis 7 — event streaming (Redis Streams)',                 phases: { Dev: 'Phase 1' },                                            port: 6379, health: null },
   'tdi-processor': { desc: 'TDI ETL Processor (Bronze → Silver → Gold)',               phases: { Dev: 'Phase 1–3' },                                          port: 8080, health: '/health' },
   'tdi-supply-chain': { desc: 'TDI Supply Chain Service (vendors, PO, inventory, QC)', phases: { Dev: 'Phase 3' },                                            port: 8002, health: '/health' },
-  'trinity-status': { desc: 'This infrastructure status dashboard',                    phases: { Production: 'Infra' },                                       port: 3000, health: null },
+  'trinity-status':     { desc: 'This infrastructure status dashboard',                         phases: { Production: 'Infra' },        port: 3000, health: null },
+  'trinity-university': { desc: 'Trinity AI University — AI reskilling platform (edu.trinitybps.com)', phases: { VPS: 'Live' },               port: 3000, health: null },
+  'trinity-postgres':   { desc: 'PostgreSQL database for Trinity AI University',                       phases: { VPS: 'Infra' },              port: 5432, health: null },
 }
 
 async function checkAppHealth(appName, rootDomain, path) {
