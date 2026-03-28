@@ -11,7 +11,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Build deploy tarball
-        run: tar -czf deploy.tar --exclude='.git' --exclude='node_modules' .
+        run: tar -czf /tmp/deploy.tar --exclude='.git' --exclude='node_modules' . && mv /tmp/deploy.tar deploy.tar
 
       - name: Deploy to CapRover (production)
         uses: caprover/deploy-from-github@v1.1.2
